@@ -1,0 +1,10 @@
+[Desktop Entry]
+Type=Application
+Name=Web App Creator
+Comment=Simple app for create a web apps
+GenericName=Web App Creator
+Exec=com.github.alexkdeveloper.web-app-creator %U
+Icon=com.github.alexkdeveloper.web-app-creator
+Terminal=false
+Categories=Utility;GTK;
+Keywords=Web;Apps;

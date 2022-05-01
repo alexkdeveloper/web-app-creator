@@ -1,0 +1,166 @@
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the com.github.alexkdeveloper.web-app-creator package.
+#
+# Heimen Stoffels <vistausss@fastmail.com>, 2022.
+msgid ""
+msgstr ""
+"Project-Id-Version: com.github.alexkdeveloper.web-app-creator\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2022-05-01 14:32+0200\n"
+"PO-Revision-Date: 2022-05-01 14:37+0200\n"
+"Last-Translator: Heimen Stoffels <vistausss@fastmail.com>\n"
+"Language-Team: Dutch <kde-i18n-nl@kde.org>\n"
+"Language: nl\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Lokalize 22.04.0\n"
+
+#: src/MainWindow.vala:36
+msgid "Web App Creator"
+msgstr "Webapps maken"
+
+#: src/MainWindow.vala:46
+msgid "Back"
+msgstr "Terug"
+
+#: src/MainWindow.vala:52
+msgid "Delete"
+msgstr "Verwijderen"
+
+#: src/MainWindow.vala:57
+msgid "Edit"
+msgstr "Bewerken"
+
+#: src/MainWindow.vala:63
+msgid "Save"
+msgstr "Opslaan"
+
+#: src/MainWindow.vala:68
+msgid "Clean"
+msgstr "Wissen"
+
+#: src/MainWindow.vala:71
+msgid "Create App"
+msgstr "App maken"
+
+#: src/MainWindow.vala:73
+msgid "Show All"
+msgstr "Alles tonen"
+
+#: src/MainWindow.vala:104
+msgid "_Name:"
+msgstr "_Naam:"
+
+#: src/MainWindow.vala:118
+msgid "_Address:"
+msgstr "_Adres:"
+
+#: src/MainWindow.vala:131
+msgid "_Icon:"
+msgstr "P_ictogram:"
+
+#: src/MainWindow.vala:145
+msgid "_Categories:"
+msgstr "_Categorieën:"
+
+#: src/MainWindow.vala:159
+msgid "_Comment:"
+msgstr "Opmerkin_g:"
+
+#: src/MainWindow.vala:196
+msgid "_Browser:"
+msgstr "Web_browser:"
+
+#: src/MainWindow.vala:210
+msgid "_Other browser:"
+msgstr "Andere br_owser:"
+
+#: src/MainWindow.vala:279
+#, c-format
+msgid ""
+"Error!\n"
+"Path %s does not exists!\n"
+"The program will not be able to perform its functions."
+msgstr ""
+"Foutmelding! "
+"‘%s’ bestaat niet. "
+"De app kan hierdoor niet worden uitgevoerd."
+
+#: src/MainWindow.vala:286
+msgid "Select the icon"
+msgstr "Kies een pictogram"
+
+#: src/MainWindow.vala:286
+msgid "_Cancel"
+msgstr "_Annuleren"
+
+#: src/MainWindow.vala:286
+msgid "_Open"
+msgstr "_Openen"
+
+#: src/MainWindow.vala:304
+msgid "Enter the name"
+msgstr "Voer een naam in"
+
+#: src/MainWindow.vala:311
+msgid "App with the same name already exists"
+msgstr "Er is al een app met deze naam"
+
+#: src/MainWindow.vala:315
+#, c-format
+msgid "Create app %s?"
+msgstr "Wilt u ‘%s’ aanmaken?"
+
+#: src/MainWindow.vala:316 src/MainWindow.vala:373 src/MainWindow.vala:401
+#: src/MainWindow.vala:424
+msgid "Question"
+msgstr "Vraag"
+
+#: src/MainWindow.vala:333 src/MainWindow.vala:394
+msgid "Choose a file"
+msgstr "Kies een bestand"
+
+#: src/MainWindow.vala:344 src/MainWindow.vala:380 src/MainWindow.vala:506
+#, c-format
+msgid "Error: %s"
+msgstr "Foutmelding: %s"
+
+#: src/MainWindow.vala:366
+msgid "Nothing to save"
+msgstr "Er valt niks op te slaan"
+
+#: src/MainWindow.vala:372
+#, c-format
+msgid "Save file %s?"
+msgstr "Wilt ‘%s’ opslaan?"
+
+#: src/MainWindow.vala:400
+#, c-format
+msgid "Delete file %s?"
+msgstr "Wilt u ‘%s’ verwijderen?"
+
+#: src/MainWindow.vala:407
+msgid "Delete failed"
+msgstr "Het verwijderen is mislukt"
+
+#: src/MainWindow.vala:419
+msgid "Nothing to clear"
+msgstr "Er valt niks te wissen"
+
+#: src/MainWindow.vala:423
+msgid "Clear the editor?"
+msgstr "Weet u zeker dat u alle velden wilt wissen?"
+
+#: src/MainWindow.vala:511
+msgid "App has been successfully created!"
+msgstr "De app is aangemaakt!"
+
+#: src/MainWindow.vala:513
+msgid "Error! Could not create app"
+msgstr "Foutmelding: de app kan niet worden aangemaakt."
+
+#: src/MainWindow.vala:578
+msgid "Message"
+msgstr "Bericht"

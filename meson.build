@@ -17,7 +17,8 @@ add_project_arguments (
 # Listing dependencies
 dependencies = [
     dependency ('gio-2.0'),
-    dependency ('gtk4')
+    dependency ('gtk4'),
+    dependency ('libadwaita-1')
 ]
 
 subdir ('src')

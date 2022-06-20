@@ -1,4 +1,4 @@
-public class WAC.MainWindow : Gtk.ApplicationWindow {
+public class WAC.MainWindow : Adw.ApplicationWindow {
     private enum Columns {
         TEXT,
         N_COLUMNS
@@ -30,7 +30,7 @@ public class WAC.MainWindow : Gtk.ApplicationWindow {
     private Gtk.Button button_create;
     private Gtk.Button button_show_all;
 
-    public MainWindow (Gtk.Application application) {
+    public MainWindow (Adw.Application application) {
         Object (
             application: application,
             title: _("Web App Creator"),
@@ -72,9 +72,7 @@ public class WAC.MainWindow : Gtk.ApplicationWindow {
         
         button_show_all = new Gtk.Button.with_label (_("Show All"));
         
-        var headerbar = new Gtk.HeaderBar ();
-        get_style_context ().add_class ("rounded");
-        headerbar.get_style_context ().add_class ("flat");
+        var headerbar = new Adw.HeaderBar ();
         headerbar.pack_start (back_button);
         headerbar.pack_start (edit_button);
         headerbar.pack_start (delete_button);
@@ -82,7 +80,6 @@ public class WAC.MainWindow : Gtk.ApplicationWindow {
         headerbar.pack_start (clear_button);
         headerbar.pack_end (button_create);
         headerbar.pack_start (button_show_all);
-        set_titlebar (headerbar);
 
         back_button.clicked.connect (on_back_clicked);
         delete_button.clicked.connect (on_delete_clicked);
@@ -214,7 +211,7 @@ public class WAC.MainWindow : Gtk.ApplicationWindow {
         vbox_other_browser.append (label_other_browser);
         vbox_other_browser.append (entry_other_browser);
 
-        vbox_create_page = new Gtk.Box (Gtk.Orientation.VERTICAL,20);
+        vbox_create_page = new Gtk.Box (Gtk.Orientation.VERTICAL, 20);
         vbox_create_page.append (vbox_name);
         vbox_create_page.append (vbox_address);
         vbox_create_page.append (vbox_icon);
@@ -244,7 +241,6 @@ public class WAC.MainWindow : Gtk.ApplicationWindow {
         vbox_list_page = new Gtk.Box (Gtk.Orientation.VERTICAL,20);
         vbox_list_page.append (scroll_list_page);
 
-
         text_view = new Gtk.TextView () {
             editable = true,
             cursor_visible = true,
@@ -262,16 +258,26 @@ public class WAC.MainWindow : Gtk.ApplicationWindow {
         stack = new Gtk.Stack () {
             transition_duration = 600,
             transition_type = Gtk.StackTransitionType.SLIDE_LEFT_RIGHT,
-            margin_top = 10,
-            margin_end = 10,
-            margin_start = 10,
-            margin_bottom = 10
         };
+
+        var clamp = new Adw.Clamp ();
+        clamp.valign = Gtk.Align.CENTER;
+        clamp.tightening_threshold = 100;
+        clamp.margin_top = 16;
+        clamp.margin_bottom = 36;
+        clamp.margin_start = 36;
+        clamp.margin_end = 36;
+        clamp.set_child (stack);
+
+        var box = new Gtk.Box(Gtk.Orientation.VERTICAL, 0);
+        box.append(headerbar);
+        box.append(clamp);
+        set_content(box);
+
         stack.add_child (vbox_create_page);
         stack.add_child (vbox_list_page);
         stack.add_child (vbox_edit_page);
         stack.visible_child = vbox_create_page;
-        set_child (stack);
 
         directory_path = Environment.get_home_dir () + "/.local/share/applications";
         GLib.File file = GLib.File.new_for_path (directory_path);

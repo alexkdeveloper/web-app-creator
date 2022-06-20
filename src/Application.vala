@@ -1,4 +1,4 @@
-public class WAC.Application : Gtk.Application {
+public class WAC.Application : Adw.Application {
     private MainWindow app_window;
 
     public Application () {

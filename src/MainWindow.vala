@@ -29,6 +29,7 @@ public class WAC.MainWindow : Adw.ApplicationWindow {
     private Gtk.Button clear_button;
     private Gtk.Button button_create;
     private Gtk.Button button_show_all;
+    private Adw.ToastOverlay overlay;
 
     public MainWindow (Adw.Application application) {
         Object (
@@ -269,9 +270,12 @@ public class WAC.MainWindow : Adw.ApplicationWindow {
         clamp.margin_end = 36;
         clamp.set_child (stack);
 
+        overlay = new Adw.ToastOverlay ();
+        overlay.set_child (clamp);
+
         var box = new Gtk.Box(Gtk.Orientation.VERTICAL, 0);
         box.append(headerbar);
-        box.append(clamp);
+        box.append(overlay);
         set_content(box);
 
         stack.add_child (vbox_create_page);
@@ -307,7 +311,7 @@ public class WAC.MainWindow : Adw.ApplicationWindow {
 
     private void on_create_file () {
         if (is_empty (entry_name.text)) {
-            alert (_("Enter the name"));
+            set_toast (_("Enter the name"));
             entry_name.grab_focus ();
             return;
         }
@@ -336,7 +340,7 @@ public class WAC.MainWindow : Adw.ApplicationWindow {
         Gtk.TreeModel model;
         Gtk.TreeIter iter;
         if (!selection.get_selected (out model, out iter)) {
-            alert (_("Choose a file"));
+            set_toast (_("Choose a file"));
             return;
         }
 
@@ -369,7 +373,7 @@ public class WAC.MainWindow : Adw.ApplicationWindow {
 
     private void on_save_clicked () {
         if (is_empty (text_view.buffer.text)) {
-            alert (_("Nothing to save"));
+            set_toast (_("Nothing to save"));
             return;
         }
 
@@ -397,7 +401,7 @@ public class WAC.MainWindow : Adw.ApplicationWindow {
         Gtk.TreeModel model;
         Gtk.TreeIter iter;
         if (!selection.get_selected (out model, out iter)) {
-            alert (_("Choose a file"));
+            set_toast (_("Choose a file"));
             return;
         }
 
@@ -410,7 +414,7 @@ public class WAC.MainWindow : Adw.ApplicationWindow {
                 if (response == Gtk.ResponseType.OK) {
                    FileUtils.remove (directory_path + "/" + item);
                    if (file.query_exists ()) {
-                      alert (_("Delete failed"));
+                      set_toast (_("Delete failed"));
                    } else {
                       show_desktop_files ();
                       text_view.buffer.text = "";
@@ -422,7 +426,7 @@ public class WAC.MainWindow : Adw.ApplicationWindow {
 
     private void on_clear_clicked () {
         if (is_empty (text_view.buffer.text)) {
-            alert (_("Nothing to clear"));
+            set_toast (_("Nothing to clear"));
             return;
         }
         
@@ -432,8 +436,8 @@ public class WAC.MainWindow : Adw.ApplicationWindow {
        dialog_clear_editor.response.connect((response) => {
                 if (response == Gtk.ResponseType.OK) {
                    text_view.buffer.text = "";
-                   dialog_clear_editor.close();
                }
+               dialog_clear_editor.close ();
             });
     }
      
@@ -577,6 +581,12 @@ Categories=" + entry_categories.text.strip ();
         set_widget_visible (clear_button, false);
         set_widget_visible (button_create, true);
         set_widget_visible (button_show_all, true);
+    }
+
+    private void set_toast(string str){
+        var toast = new Adw.Toast (str);
+        toast.set_timeout (3);
+        overlay.add_toast (toast);
     }
 
     private void alert (string str) {

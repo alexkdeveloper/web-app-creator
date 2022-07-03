@@ -68,10 +68,17 @@ public class WAC.MainWindow : Adw.ApplicationWindow {
            clear_button.set_icon_name ("edit-clear-symbolic");
            clear_button.set_tooltip_text (_("Clean"));
 
+        var button_create_content = new Adw.ButtonContent ();
+        button_create_content.set_icon_name ("list-add-symbolic");
+        button_create_content.set_label (_("Create App"));
+        button_create = new Gtk.Button ();
+        button_create.set_child (button_create_content);
 
-        button_create = new Gtk.Button.with_label (_("Create App"));
-        
-        button_show_all = new Gtk.Button.with_label (_("Show All"));
+        var button_show_all_content = new Adw.ButtonContent ();
+        button_show_all_content.set_icon_name ("folder-open-symbolic");
+        button_show_all_content.set_label (_("Show All"));
+        button_show_all = new Gtk.Button ();
+        button_show_all.set_child (button_show_all_content);
         
         var headerbar = new Adw.HeaderBar ();
         headerbar.pack_start (back_button);

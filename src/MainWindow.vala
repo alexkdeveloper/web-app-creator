@@ -34,7 +34,7 @@ public class WAC.MainWindow : Adw.ApplicationWindow {
     public MainWindow (Adw.Application application) {
         Object (
             application: application,
-            title: _("Web App Creator"),
+            title: "Web App Creator",
             default_height: 550,
             default_width: 450
         );

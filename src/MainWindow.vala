@@ -293,7 +293,7 @@ public class WAC.MainWindow : Adw.ApplicationWindow {
         directory_path = Environment.get_home_dir () + "/.local/share/applications";
         GLib.File file = GLib.File.new_for_path (directory_path);
         if (!file.query_exists ()) {
-            alert (_("Error!\nPath %s does not exists!\nThe program will not be able to perform its functions.").printf(directory_path));
+            alert ("",_("Error!\nPath %s does not exists!\nThe program will not be able to perform its functions.").printf(directory_path));
             button_create.sensitive = false;
             button_show_all.sensitive = false;
         }
@@ -326,16 +326,20 @@ public class WAC.MainWindow : Adw.ApplicationWindow {
 
         GLib.File file = GLib.File.new_for_path (directory_path + "/" + entry_name.text.strip () + ".desktop");
         if (file.query_exists ()) {
-            alert (_("App with the same name already exists"));
+            alert (_("App with the same name already exists"),"");
             entry_name.grab_focus ();
             return;
         }
-        var dialog_create_desktop_file = new Gtk.MessageDialog(this, Gtk.DialogFlags.MODAL,Gtk.MessageType.QUESTION, Gtk.ButtonsType.OK_CANCEL, _("Create app %s?").printf (entry_name.get_text()));
-       dialog_create_desktop_file.set_title(_("Question"));
-       dialog_create_desktop_file.show ();
-       dialog_create_desktop_file.response.connect((response) => {
-                if (response == Gtk.ResponseType.OK) {
-                   create_desktop_file ();
+        var dialog_create_desktop_file = new Adw.MessageDialog(this, _("Create app %s?").printf (entry_name.get_text()), "");
+            dialog_create_desktop_file.add_response("cancel", _("_Cancel"));
+            dialog_create_desktop_file.add_response("ok", _("_OK"));
+            dialog_create_desktop_file.set_default_response("ok");
+            dialog_create_desktop_file.set_close_response("cancel");
+            dialog_create_desktop_file.set_response_appearance("ok", SUGGESTED);
+            dialog_create_desktop_file.show();
+            dialog_create_desktop_file.response.connect((response) => {
+                if (response == "ok") {
+                    create_desktop_file();
                 }
                 dialog_create_desktop_file.close();
             });
@@ -387,12 +391,16 @@ public class WAC.MainWindow : Adw.ApplicationWindow {
 
         GLib.File file = GLib.File.new_for_path (directory_path + "/" + item);
         
-        var dialog_save_file = new Gtk.MessageDialog(this, Gtk.DialogFlags.MODAL,Gtk.MessageType.QUESTION, Gtk.ButtonsType.OK_CANCEL, _("Save file %s?").printf (file.get_basename ()));
-       dialog_save_file.set_title(_("Question"));
-       dialog_save_file.show ();
-       dialog_save_file.response.connect((response) => {
-                if (response == Gtk.ResponseType.OK) {
-                   try {
+         var dialog_save_file = new Adw.MessageDialog(this, _("Save file %s?").printf (file.get_basename ()), "");
+            dialog_save_file.add_response("cancel", _("_Cancel"));
+            dialog_save_file.add_response("ok", _("_OK"));
+            dialog_save_file.set_default_response("ok");
+            dialog_save_file.set_close_response("cancel");
+            dialog_save_file.set_response_appearance("ok", SUGGESTED);
+            dialog_save_file.show();
+            dialog_save_file.response.connect((response) => {
+                if (response == "ok") {
+                    try {
                       FileUtils.set_contents (file.get_path (), text_view.buffer.text);
                    } catch (Error e) {
                       stderr.printf (_("Error: %s") + "\n", e.message);
@@ -415,19 +423,23 @@ public class WAC.MainWindow : Adw.ApplicationWindow {
 
         GLib.File file = GLib.File.new_for_path (directory_path + "/" + item);
 
-        var dialog_delete_file = new Gtk.MessageDialog(this, Gtk.DialogFlags.MODAL,Gtk.MessageType.QUESTION, Gtk.ButtonsType.OK_CANCEL, _("Delete file %s?").printf (file.get_basename ()));
-       dialog_delete_file.set_title(_("Question"));
-       dialog_delete_file.show ();
-       dialog_delete_file.response.connect((response) => {
-                if (response == Gtk.ResponseType.OK) {
-                   FileUtils.remove (directory_path + "/" + item);
+        var dialog_delete_file = new Adw.MessageDialog(this, _("Delete file %s?").printf (file.get_basename ()), "");
+            dialog_delete_file.add_response("cancel", _("_Cancel"));
+            dialog_delete_file.add_response("ok", _("_OK"));
+            dialog_delete_file.set_default_response("ok");
+            dialog_delete_file.set_close_response("cancel");
+            dialog_delete_file.set_response_appearance("ok", SUGGESTED);
+            dialog_delete_file.show();
+            dialog_delete_file.response.connect((response) => {
+                if (response == "ok") {
+                     FileUtils.remove (directory_path + "/" + item);
                    if (file.query_exists ()) {
                       set_toast (_("Delete failed"));
                    } else {
                       show_desktop_files ();
                       text_view.buffer.text = "";
                    }
-                  }
+                }
                 dialog_delete_file.close();
             });
     }
@@ -438,14 +450,18 @@ public class WAC.MainWindow : Adw.ApplicationWindow {
             return;
         }
         
-         var dialog_clear_editor = new Gtk.MessageDialog(this, Gtk.DialogFlags.MODAL,Gtk.MessageType.QUESTION, Gtk.ButtonsType.OK_CANCEL, _("Clear the editor?"));
-       dialog_clear_editor.set_title(_("Question"));
-       dialog_clear_editor.show ();
-       dialog_clear_editor.response.connect((response) => {
-                if (response == Gtk.ResponseType.OK) {
+         var dialog_clear_editor = new Adw.MessageDialog(this, _("Clear the editor?"), "");
+            dialog_clear_editor.add_response("cancel", _("_Cancel"));
+            dialog_clear_editor.add_response("ok", _("_OK"));
+            dialog_clear_editor.set_default_response("ok");
+            dialog_clear_editor.set_close_response("cancel");
+            dialog_clear_editor.set_response_appearance("ok", SUGGESTED);
+            dialog_clear_editor.show();
+            dialog_clear_editor.response.connect((response) => {
+                if (response == "ok") {
                    text_view.buffer.text = "";
-               }
-               dialog_clear_editor.close ();
+                }
+                dialog_clear_editor.close();
             });
     }
      
@@ -526,9 +542,9 @@ Categories=" + entry_categories.text.strip ();
 
         GLib.File file = GLib.File.new_for_path (path);
         if (file.query_exists ()) {
-            alert (_("App has been successfully created!"));
+            alert (_("App has been successfully created!"),"");
         } else {
-            alert (_("Error! Could not create app"));
+            alert (_("Error! Could not create app"),"");
         }
     }
 
@@ -597,10 +613,14 @@ Categories=" + entry_categories.text.strip ();
         overlay.add_toast (toast);
     }
 
-    private void alert (string str) {
-        var dialog_alert = new Gtk.MessageDialog(this, Gtk.DialogFlags.MODAL, Gtk.MessageType.INFO, Gtk.ButtonsType.OK, str);
-          dialog_alert.set_title(_("Message"));
-          dialog_alert.response.connect((_) => { dialog_alert.close(); });
-          dialog_alert.show();
-     }
+     private void alert (string heading, string body){
+            var dialog_alert = new Adw.MessageDialog(this, heading, body);
+            if (body != "") {
+                dialog_alert.set_body(body);
+            }
+            dialog_alert.add_response("ok", _("_OK"));
+            dialog_alert.set_response_appearance("ok", SUGGESTED);
+            dialog_alert.response.connect((_) => { dialog_alert.close(); });
+            dialog_alert.show();
+        }
 }

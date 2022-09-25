@@ -1,0 +1,160 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"POT-Creation-Date: 2022-09-25 18:42+0800\n"
+"PO-Revision-Date: 2022-09-25 18:42+0800\n"
+"Last-Translator: vikdevelop https://github.com/vikdevelop\n"
+"Language-Team: \n"
+"Language: cs\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
+"%10<=4 && (n%100<12 || n%100>14) ? 1 : 2);\n"
+"X-Generator: Poedit 3.1\n"
+"X-Poedit-Basepath: ../src\n"
+"X-Poedit-SearchPath-0: MainWindow.vala\n"
+
+#: MainWindow.vala:47
+msgid "Back"
+msgstr "Zpět"
+
+#: MainWindow.vala:53
+msgid "Delete"
+msgstr "Smazat"
+
+#: MainWindow.vala:58
+msgid "Edit"
+msgstr "Upravit"
+
+#: MainWindow.vala:64
+msgid "Save"
+msgstr "Uložit"
+
+#: MainWindow.vala:69
+msgid "Clean"
+msgstr "Vyčistit"
+
+#: MainWindow.vala:73
+msgid "Create App"
+msgstr "Vytvořit"
+
+#: MainWindow.vala:79
+msgid "Show All"
+msgstr "Zobrazit vše"
+
+#: MainWindow.vala:109
+msgid "_Name:"
+msgstr "_Název:"
+
+#: MainWindow.vala:123
+msgid "_Address:"
+msgstr "_Adresa:"
+
+#: MainWindow.vala:136
+msgid "_Icon:"
+msgstr "_Ikona:"
+
+#: MainWindow.vala:150
+msgid "_Categories:"
+msgstr "_Kategorie:"
+
+#: MainWindow.vala:164
+msgid "_Comment:"
+msgstr "_Komentář:"
+
+#: MainWindow.vala:201
+msgid "_Browser:"
+msgstr "_Prohlížeč:"
+
+#: MainWindow.vala:215
+msgid "_Other browser:"
+msgstr "_Jiný prohlížeč:"
+
+#: MainWindow.vala:296
+#, c-format
+msgid ""
+"Error!\n"
+"Path %s does not exists!\n"
+"The program will not be able to perform its functions."
+msgstr ""
+"Chyba!\n"
+"Umíštění %s neexistuje!\n"
+"Program nebude moci plnit své funkce."
+
+#: MainWindow.vala:303
+msgid "Select the icon"
+msgstr "Vyberte ikonu"
+
+#: MainWindow.vala:303
+msgid "_Cancel"
+msgstr "_Zrušit"
+
+#: MainWindow.vala:303
+msgid "_Open"
+msgstr "_Otevřít"
+
+#: MainWindow.vala:321
+msgid "Enter the name"
+msgstr "Zadejte název"
+
+#: MainWindow.vala:328
+msgid "App with the same name already exists"
+msgstr "Aplikace se stejným názvem již existuje"
+
+#: MainWindow.vala:332
+#, c-format
+msgid "Create app %s?"
+msgstr "Vytvořit aplikaci %s?"
+
+#: MainWindow.vala:333 MainWindow.vala:390 MainWindow.vala:418
+#: MainWindow.vala:441
+msgid "Question"
+msgstr "Otázka"
+
+#: MainWindow.vala:350 MainWindow.vala:411
+msgid "Choose a file"
+msgstr "Vybrat soubor"
+
+#: MainWindow.vala:361 MainWindow.vala:397 MainWindow.vala:523
+#, c-format
+msgid "Error: %s"
+msgstr "Chyba: %s"
+
+#: MainWindow.vala:383
+msgid "Nothing to save"
+msgstr "Není co uložit"
+
+#: MainWindow.vala:389
+#, c-format
+msgid "Save file %s?"
+msgstr "Uložit soubor %s?"
+
+#: MainWindow.vala:417
+#, c-format
+msgid "Delete file %s?"
+msgstr "Odstranit %s?"
+
+#: MainWindow.vala:424
+msgid "Delete failed"
+msgstr "Odstranění selhalo"
+
+#: MainWindow.vala:436
+msgid "Nothing to clear"
+msgstr "Není co vyčistit"
+
+#: MainWindow.vala:440
+msgid "Clear the editor?"
+msgstr "Vyčistit editor?"
+
+#: MainWindow.vala:528
+msgid "App has been successfully created!"
+msgstr "Aplikace byla úspěšně vytvořena!"
+
+#: MainWindow.vala:530
+msgid "Error! Could not create app"
+msgstr "Chyba! Nelze vytvořit aplikaci"
+
+#: MainWindow.vala:601
+msgid "Message"
+msgstr "Zpráva"

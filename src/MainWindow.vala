@@ -300,18 +300,19 @@ public class WAC.MainWindow : Adw.ApplicationWindow {
     }
     
     private void on_open_icon () {
-        var file_chooser = new Gtk.FileChooserDialog (_("Select the icon"), this, Gtk.FileChooserAction.OPEN, _("_Cancel"), Gtk.ResponseType.CANCEL, _("_Open"), Gtk.ResponseType.ACCEPT);
+        var file_chooser = new Gtk.FileChooserNative (_("Select the icon"), this, Gtk.FileChooserAction.OPEN,null,null);
             file_chooser.set_modal(true);
             Gtk.FileFilter filter = new Gtk.FileFilter ();
             file_chooser.set_filter (filter);
             filter.add_mime_type ("image/jpeg");
             filter.add_mime_type ("image/png");
             filter.add_mime_type ("image/svg+xml");
+            filter.add_mime_type ("image/x-xpixmap");
+            filter.add_mime_type ("image/vnd.microsoft.icon");
             file_chooser.response.connect((response) => {
                 if (response == Gtk.ResponseType.ACCEPT) {
                     entry_icon.set_text(file_chooser.get_file().get_path());
                 }
-                file_chooser.close();
             });
 
             file_chooser.show();

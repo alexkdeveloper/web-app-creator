@@ -44,32 +44,32 @@ msgid "Show All"
 msgstr "Zobrazit vše"
 
 #: MainWindow.vala:109
-msgid "_Name:"
-msgstr "_Název:"
+msgid "Name"
+msgstr "Název"
 
 #: MainWindow.vala:123
-msgid "_Address:"
-msgstr "_Adresa:"
+msgid "Address"
+msgstr "Adresa"
 
 #: MainWindow.vala:136
-msgid "_Icon:"
-msgstr "_Ikona:"
+msgid "Icon"
+msgstr "Ikona"
 
 #: MainWindow.vala:150
-msgid "_Categories:"
-msgstr "_Kategorie:"
+msgid "Categories"
+msgstr "Kategorie"
 
 #: MainWindow.vala:164
-msgid "_Comment:"
-msgstr "_Komentář:"
+msgid "Comment"
+msgstr "Komentář"
 
 #: MainWindow.vala:201
-msgid "_Browser:"
-msgstr "_Prohlížeč:"
+msgid "Browser"
+msgstr "Prohlížeč"
 
 #: MainWindow.vala:215
-msgid "_Other browser:"
-msgstr "_Jiný prohlížeč:"
+msgid "Other browser"
+msgstr "Jiný prohlížeč"
 
 #: MainWindow.vala:296
 #, c-format

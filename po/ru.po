@@ -44,32 +44,32 @@ msgid "Show All"
 msgstr "Показать все"
 
 #: MainWindow.vala:109
-msgid "_Name:"
-msgstr "_Название:"
+msgid "Name"
+msgstr "Название"
 
 #: MainWindow.vala:123
-msgid "_Address:"
-msgstr "_Адрес:"
+msgid "Address"
+msgstr "Адрес"
 
 #: MainWindow.vala:136
-msgid "_Icon:"
-msgstr "_Иконка:"
+msgid "Icon"
+msgstr "Иконка"
 
 #: MainWindow.vala:150
-msgid "_Categories:"
-msgstr "_Категории:"
+msgid "Categories"
+msgstr "Категории"
 
 #: MainWindow.vala:164
-msgid "_Comment:"
-msgstr "_Комментарий:"
+msgid "Comment"
+msgstr "Комментарий"
 
 #: MainWindow.vala:201
-msgid "_Browser:"
-msgstr "_Браузер:"
+msgid "Browser"
+msgstr "Браузер"
 
 #: MainWindow.vala:215
-msgid "_Other browser:"
-msgstr "_Другой браузер:"
+msgid "Other browser"
+msgstr "Другой браузер"
 
 #: MainWindow.vala:296
 #, c-format

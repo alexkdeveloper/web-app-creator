@@ -50,32 +50,32 @@ msgid "Show All"
 msgstr "Alles tonen"
 
 #: src/MainWindow.vala:104
-msgid "_Name:"
-msgstr "_Naam:"
+msgid "Name"
+msgstr "Naam"
 
 #: src/MainWindow.vala:118
-msgid "_Address:"
-msgstr "_Adres:"
+msgid "Address"
+msgstr "Adres"
 
 #: src/MainWindow.vala:131
-msgid "_Icon:"
-msgstr "P_ictogram:"
+msgid "Icon"
+msgstr "Pictogram"
 
 #: src/MainWindow.vala:145
-msgid "_Categories:"
-msgstr "_Categorieën:"
+msgid "Categories"
+msgstr "Categorieën"
 
 #: src/MainWindow.vala:159
-msgid "_Comment:"
-msgstr "Opmerkin_g:"
+msgid "Comment"
+msgstr "Opmerking"
 
 #: src/MainWindow.vala:196
-msgid "_Browser:"
-msgstr "Web_browser:"
+msgid "Browser"
+msgstr "Browser"
 
 #: src/MainWindow.vala:210
-msgid "_Other browser:"
-msgstr "Andere br_owser:"
+msgid "Other browser"
+msgstr "Andere browser"
 
 #: src/MainWindow.vala:279
 #, c-format

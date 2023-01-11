@@ -1,26 +1,21 @@
 public class WAC.MainWindow : Adw.ApplicationWindow {
-    private enum Columns {
-        TEXT,
-        N_COLUMNS
-    }
 
     private string directory_path;
     private string item;
 
     private Gtk.Stack stack;
-    private Gtk.Box vbox_create_page;
+    private Gtk.ListBox list_box;
     private Gtk.Box vbox_list_page;
     private Gtk.Box vbox_edit_page;
-    private Gtk.ListStore list_store;
-    private Gtk.TreeView tree_view;
-    private GLib.List<string> list;
-    private Gtk.ComboBox combobox;
-    private Gtk.Entry entry_name;
-    private Gtk.Entry entry_address;
-    private Gtk.Entry entry_icon;
-    private Gtk.Entry entry_categories;
-    private Gtk.Entry entry_comment;
-    private Gtk.Entry entry_other_browser;
+    private Adw.Clamp clamp_create_page;
+    private Adw.ComboRow combo;
+    private Adw.EntryRow entry_name;
+    private Adw.EntryRow entry_address;
+    private Adw.EntryRow entry_icon;
+    private Adw.EntryRow entry_categories;
+    private Adw.EntryRow entry_comment;
+    private Adw.EntryRow entry_other_browser;
+    private Gtk.SearchEntry entry_search;
     private Gtk.TextView text_view;
     private Gtk.Button back_button;
     private Gtk.Button delete_button;
@@ -29,14 +24,16 @@ public class WAC.MainWindow : Adw.ApplicationWindow {
     private Gtk.Button clear_button;
     private Gtk.Button button_create;
     private Gtk.Button button_show_all;
+    private Gtk.Button search_button;
+    private Gtk.Button open_icon;
     private Adw.ToastOverlay overlay;
 
     public MainWindow (Adw.Application application) {
         Object (
             application: application,
             title: "Web App Creator",
-            default_height: 550,
-            default_width: 450
+            default_height: 500,
+            default_width: 500
         );
     }
 
@@ -68,6 +65,10 @@ public class WAC.MainWindow : Adw.ApplicationWindow {
            clear_button.set_icon_name ("edit-clear-symbolic");
            clear_button.set_tooltip_text (_("Clean"));
 
+        search_button = new Gtk.Button ();
+            search_button.vexpand = false;
+            search_button.set_icon_name("edit-find-symbolic");
+
         var button_create_content = new Adw.ButtonContent ();
         button_create_content.set_icon_name ("list-add-symbolic");
         button_create_content.set_label (_("Create App"));
@@ -86,8 +87,9 @@ public class WAC.MainWindow : Adw.ApplicationWindow {
         headerbar.pack_start (delete_button);
         headerbar.pack_start (save_button);
         headerbar.pack_start (clear_button);
-        headerbar.pack_end (button_create);
         headerbar.pack_start (button_show_all);
+        headerbar.pack_end (button_create);
+        headerbar.pack_end (search_button);
 
         back_button.clicked.connect (on_back_clicked);
         delete_button.clicked.connect (on_delete_clicked);
@@ -96,158 +98,185 @@ public class WAC.MainWindow : Adw.ApplicationWindow {
         clear_button.clicked.connect (on_clear_clicked);
         button_create.clicked.connect (on_create_file);
         button_show_all.clicked.connect (go_to_list_page_from_create_page);
+        search_button.clicked.connect(()=>{
+               if(entry_search.is_visible()){
+                  entry_search.hide();
+                  entry_search.set_text("");
+                  if(item != null){
+                     list_box.select_row(list_box.get_row_at_index(get_index(item)));
+                  }
+               }else{
+                  entry_search.show();
+                  entry_search.grab_focus();
+               }
+            });
 
         set_buttons_on_create_page ();
 
-        entry_name = new Gtk.Entry ();
-        entry_name.set_icon_from_icon_name (Gtk.EntryIconPosition.SECONDARY, "edit-clear-symbolic");
-        entry_name.icon_press.connect ((pos, event) => {
-                entry_name.text = "";
-                entry_name.grab_focus ();
+         var clear_name = new Gtk.Button();
+        clear_name.set_icon_name("edit-clear-symbolic");
+        clear_name.add_css_class("destructive-action");
+        clear_name.add_css_class("circular");
+        clear_name.valign = Gtk.Align.CENTER;
+        clear_name.visible = false;
+        clear_name.clicked.connect((event) => {
+            on_clear_entry(entry_name);
         });
 
-        var label_name = new Gtk.Label.with_mnemonic (_("_Name:"));
-        label_name.set_xalign(0);
-
-        var vbox_name = new Gtk.Box (Gtk.Orientation.VERTICAL, 5);
-        vbox_name.append (label_name);
-        vbox_name.append (entry_name);
-
-        entry_address = new Gtk.Entry ();
-        entry_address.set_icon_from_icon_name (Gtk.EntryIconPosition.SECONDARY, "edit-clear-symbolic");
-        entry_address.icon_press.connect ((pos, event) => {
-                entry_address.text = "";
-                entry_address.grab_focus ();
+        entry_name = new Adw.EntryRow ();
+        entry_name.set_title (_("Name"));
+        entry_name.add_suffix (clear_name);
+        entry_name.changed.connect((event) => {
+            on_entry_change(entry_name, clear_name);
         });
 
-        var label_address = new Gtk.Label.with_mnemonic (_("_Address:"));
-        label_address.set_xalign(0);
-
-        var vbox_address = new Gtk.Box (Gtk.Orientation.VERTICAL, 5);
-        vbox_address.append (label_address);
-        vbox_address.append (entry_address);
-
-        entry_icon = new Gtk.Entry ();
-        entry_icon.set_icon_from_icon_name (Gtk.EntryIconPosition.SECONDARY, "document-open-symbolic");
-        entry_icon.icon_press.connect ((pos, event) => {
-                on_open_icon ();
+         var clear_address = new Gtk.Button();
+        clear_address.set_icon_name("edit-clear-symbolic");
+        clear_address.add_css_class("destructive-action");
+        clear_address.add_css_class("circular");
+        clear_address.valign = Gtk.Align.CENTER;
+        clear_address.visible = false;
+        clear_address.clicked.connect((event) => {
+            on_clear_entry(entry_address);
         });
 
-        var label_icon = new Gtk.Label.with_mnemonic (_("_Icon:"));
-        label_icon.set_xalign(0);
-
-        var vbox_icon = new Gtk.Box (Gtk.Orientation.VERTICAL, 5);
-        vbox_icon.append (label_icon);
-        vbox_icon.append (entry_icon);
-
-        entry_categories = new Gtk.Entry ();
-        entry_categories.set_icon_from_icon_name (Gtk.EntryIconPosition.SECONDARY, "edit-clear-symbolic");
-        entry_categories.icon_press.connect ((pos, event) => {
-                entry_categories.text = "";
-                entry_categories.grab_focus ();
+        entry_address = new Adw.EntryRow ();
+        entry_address.set_title (_("Address"));
+        entry_address.add_suffix (clear_address);
+        entry_address.changed.connect((event) => {
+            on_entry_change(entry_address, clear_address);
         });
 
-        var label_categories = new Gtk.Label.with_mnemonic (_("_Categories:"));
-        label_categories.set_xalign(0);
+        open_icon = new Gtk.Button();
+        open_icon.set_icon_name("folder-open-symbolic");
+        open_icon.add_css_class("suggested-action");
+        open_icon.add_css_class("circular");
+        open_icon.valign = Gtk.Align.CENTER;
+        open_icon.clicked.connect (on_open_icon);
 
-        var vbox_categories = new Gtk.Box (Gtk.Orientation.VERTICAL, 5);
-        vbox_categories.append (label_categories);
-        vbox_categories.append (entry_categories);
-
-        entry_comment = new Gtk.Entry ();
-        entry_comment.set_icon_from_icon_name (Gtk.EntryIconPosition.SECONDARY, "edit-clear-symbolic");
-        entry_comment.icon_press.connect ((pos, event) => {
-                entry_comment.text = "";
-                entry_comment.grab_focus ();
+          var clear_icon = new Gtk.Button();
+        clear_icon.set_icon_name("edit-clear-symbolic");
+        clear_icon.add_css_class("destructive-action");
+        clear_icon.add_css_class("circular");
+        clear_icon.valign = Gtk.Align.CENTER;
+        clear_icon.visible = false;
+        clear_icon.clicked.connect((event) => {
+            on_clear_entry(entry_icon);
         });
 
-        var label_comment = new Gtk.Label.with_mnemonic (_("_Comment:"));
-        label_comment.set_xalign(0);
+        entry_icon = new Adw.EntryRow ();
+        entry_icon.set_title (_("Icon"));
+        entry_icon.add_suffix (open_icon);
+        entry_icon.add_suffix (clear_icon);
+        entry_icon.changed.connect((event) => {
+            on_entry_change(entry_icon, clear_icon);
+        });
 
-        var vbox_comment = new Gtk.Box (Gtk.Orientation.VERTICAL, 5);
-        vbox_comment.append (label_comment);
-        vbox_comment.append (entry_comment);
+          var clear_categories = new Gtk.Button();
+        clear_categories.set_icon_name("edit-clear-symbolic");
+        clear_categories.add_css_class("destructive-action");
+        clear_categories.add_css_class("circular");
+        clear_categories.valign = Gtk.Align.CENTER;
+        clear_categories.visible = false;
+        clear_categories.clicked.connect((event) => {
+            on_clear_entry(entry_categories);
+        });
+
+        entry_categories = new Adw.EntryRow ();
+        entry_categories.set_title (_("Categories"));
+        entry_categories.add_suffix (clear_categories);
+        entry_categories.changed.connect((event) => {
+            on_entry_change(entry_categories, clear_categories);
+        });
         
-        var liststore = new Gtk.ListStore(1, typeof (string));
-        Gtk.TreeIter iter;
-
-        liststore.append(out iter);
-        liststore.set(iter, 0, "Firefox", -1);
-        liststore.append(out iter);
-        liststore.set(iter, 0, "Chromium", -1);
-        liststore.append(out iter);
-        liststore.set(iter, 0, "Yandex Browser", -1);
-        liststore.append(out iter);
-        liststore.set(iter, 0, "Google Chrome", -1);
-        liststore.append(out iter);
-        liststore.set(iter, 0, "Brave", -1);
-        liststore.append(out iter);
-        liststore.set(iter, 0, "Epiphany", -1);
-        liststore.append(out iter);
-        liststore.set(iter, 0, "Vivaldi", -1);
-        liststore.append(out iter);
-        liststore.set(iter, 0, "Falkon", -1);
-        liststore.append(out iter);
-        liststore.set(iter, 0, "Microsoft Edge", -1);
-    
-        var cellrenderertext = new Gtk.CellRendererText();
-
-        combobox = new Gtk.ComboBox();
-        combobox.set_model(liststore);
-        combobox.pack_start(cellrenderertext, true);
-        combobox.add_attribute(cellrenderertext, "text", 0);
-        combobox.set_active(0);
+          var clear_comment = new Gtk.Button();
+        clear_comment.set_icon_name("edit-clear-symbolic");
+        clear_comment.add_css_class("destructive-action");
+        clear_comment.add_css_class("circular");
+        clear_comment.valign = Gtk.Align.CENTER;
+        clear_comment.visible = false;
+        clear_comment.clicked.connect((event) => {
+            on_clear_entry(entry_comment);
+        });
         
-        var label_browser = new Gtk.Label.with_mnemonic (_("_Browser:"));
-        label_browser.set_xalign(0);
-
-        var vbox_browser = new Gtk.Box (Gtk.Orientation.VERTICAL, 5);
-        vbox_browser.append (label_browser);
-        vbox_browser.append (combobox);
+        entry_comment = new Adw.EntryRow ();
+        entry_comment.set_title (_("Comment"));
+        entry_comment.add_suffix (clear_comment);
+        entry_comment.changed.connect((event) => {
+            on_entry_change(entry_comment, clear_comment);
+        });
         
-        entry_other_browser = new Gtk.Entry ();
-        entry_other_browser.set_icon_from_icon_name (Gtk.EntryIconPosition.SECONDARY, "edit-clear-symbolic");
-        entry_other_browser.icon_press.connect ((pos, event) => {
-                entry_other_browser.text = "";
-                entry_other_browser.grab_focus ();
+        string[] browsers = {"Firefox","Chromium","Yandex Browser","Google Chrome","Brave","Epiphany","Vivaldi","Falkon","Microsoft Edge"};
+
+        Gtk.StringList model = new Gtk.StringList(browsers);
+
+        combo = new Adw.ComboRow ();
+        combo.set_title (_("Browser"));
+        combo.set_model (model);
+        combo.set_selected (0);
+
+         var clear_other_browser = new Gtk.Button();
+        clear_other_browser.set_icon_name("edit-clear-symbolic");
+        clear_other_browser.add_css_class("destructive-action");
+        clear_other_browser.add_css_class("circular");
+        clear_other_browser.valign = Gtk.Align.CENTER;
+        clear_other_browser.visible = false;
+        clear_other_browser.clicked.connect((event) => {
+            on_clear_entry(entry_other_browser);
         });
 
-        var label_other_browser = new Gtk.Label.with_mnemonic (_("_Other browser:"));
-        label_other_browser.set_xalign(0);
+        entry_other_browser = new Adw.EntryRow ();
+        entry_other_browser.set_title (_("Other browser"));
+        entry_other_browser.add_suffix (clear_other_browser);
+        entry_other_browser.changed.connect((event) => {
+            on_entry_change(entry_other_browser, clear_other_browser);
+        });
 
-        var vbox_other_browser = new Gtk.Box (Gtk.Orientation.VERTICAL, 5);
-        vbox_other_browser.append (label_other_browser);
-        vbox_other_browser.append (entry_other_browser);
+        var list_box_create_page = new Gtk.ListBox ();
+        list_box_create_page.add_css_class("boxed-list");
+        list_box_create_page.append (entry_name);
+        list_box_create_page.append (entry_address);
+        list_box_create_page.append (entry_icon);
+        list_box_create_page.append (entry_categories);
+        list_box_create_page.append (entry_comment);
+        list_box_create_page.append (combo);
+        list_box_create_page.append (entry_other_browser);
 
-        vbox_create_page = new Gtk.Box (Gtk.Orientation.VERTICAL, 20);
-        vbox_create_page.append (vbox_name);
-        vbox_create_page.append (vbox_address);
-        vbox_create_page.append (vbox_icon);
-        vbox_create_page.append (vbox_categories);
-        vbox_create_page.append (vbox_comment);
-        vbox_create_page.append (vbox_browser);
-        vbox_create_page.append (vbox_other_browser);
-
-        var text = new Gtk.CellRendererText ();
-
-        var column = new Gtk.TreeViewColumn ();
-        column.pack_start (text, true);
-        column.add_attribute (text, "markup", Columns.TEXT);
-
-        list_store = new Gtk.ListStore (Columns.N_COLUMNS, typeof (string));
-        tree_view = new Gtk.TreeView.with_model (list_store) {
-            headers_visible = false
+         clamp_create_page = new Adw.Clamp(){
+            tightening_threshold = 100,
+            valign = Gtk.Align.CENTER,
+            margin_top = 15,
+            margin_bottom = 15
         };
-        tree_view.append_column (column);
-        tree_view.cursor_changed.connect (on_select_item);
+        clamp_create_page.set_child(list_box_create_page);
 
-        var scroll_list_page = new Gtk.ScrolledWindow ();
-        scroll_list_page.set_policy (Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.AUTOMATIC);
-        scroll_list_page.set_vexpand(true);
-        scroll_list_page.set_child (tree_view);
+        list_box = new Gtk.ListBox ();
+        list_box.vexpand = true;
+        list_box.add_css_class("boxed-list");
+        list_box.row_selected.connect(on_select_item);
+        var scroll = new Gtk.ScrolledWindow () {
+            propagate_natural_height = true,
+            propagate_natural_width = true
+        };
+         var clamp = new Adw.Clamp(){
+            tightening_threshold = 100,
+            margin_top = 15,
+            margin_bottom = 15
+        };
+        clamp.set_child(list_box);
+        scroll.set_child(clamp);
 
-        vbox_list_page = new Gtk.Box (Gtk.Orientation.VERTICAL,20);
-        vbox_list_page.append (scroll_list_page);
+        entry_search = new Gtk.SearchEntry();
+        entry_search.hexpand = true;
+        entry_search.changed.connect(show_desktop_files);
+        entry_search.margin_start = 35;
+        entry_search.margin_end = 35;
+        entry_search.margin_top = 15;
+        entry_search.hide();
+
+        vbox_list_page = new Gtk.Box (Gtk.Orientation.VERTICAL,0);
+        vbox_list_page.append (entry_search);
+        vbox_list_page.append (scroll);
 
         text_view = new Gtk.TextView () {
             editable = true,
@@ -261,6 +290,10 @@ public class WAC.MainWindow : Adw.ApplicationWindow {
         scroll_edit_page.set_child (text_view);
 
         vbox_edit_page = new Gtk.Box (Gtk.Orientation.VERTICAL, 0);
+        vbox_edit_page.margin_top = 20;
+        vbox_edit_page.margin_bottom = 20;
+        vbox_edit_page.margin_start = 20;
+        vbox_edit_page.margin_end = 20;
         vbox_edit_page.append (scroll_edit_page);
 
         stack = new Gtk.Stack () {
@@ -268,27 +301,18 @@ public class WAC.MainWindow : Adw.ApplicationWindow {
             transition_type = Gtk.StackTransitionType.SLIDE_LEFT_RIGHT,
         };
 
-        var clamp = new Adw.Clamp ();
-        clamp.valign = Gtk.Align.CENTER;
-        clamp.tightening_threshold = 100;
-        clamp.margin_top = 16;
-        clamp.margin_bottom = 36;
-        clamp.margin_start = 36;
-        clamp.margin_end = 36;
-        clamp.set_child (stack);
+        stack.add_child (clamp_create_page);
+        stack.add_child (vbox_list_page);
+        stack.add_child (vbox_edit_page);
+        stack.visible_child = clamp_create_page;
 
         overlay = new Adw.ToastOverlay ();
-        overlay.set_child (clamp);
+        overlay.set_child (stack);
 
         var box = new Gtk.Box(Gtk.Orientation.VERTICAL, 0);
         box.append(headerbar);
         box.append(overlay);
         set_content(box);
-
-        stack.add_child (vbox_create_page);
-        stack.add_child (vbox_list_page);
-        stack.add_child (vbox_edit_page);
-        stack.visible_child = vbox_create_page;
 
         directory_path = Environment.get_home_dir () + "/.local/share/applications";
         GLib.File file = GLib.File.new_for_path (directory_path);
@@ -299,6 +323,25 @@ public class WAC.MainWindow : Adw.ApplicationWindow {
         }
     }
     
+    private void on_clear_entry(Adw.EntryRow entry){
+    entry.set_text("");
+    entry.grab_focus();
+}
+
+   private void on_entry_change(Adw.EntryRow entry, Gtk.Button clear){
+    if (!is_empty(entry.get_text())) {
+          if (entry == entry_icon) {
+            open_icon.set_visible(false);
+        }
+        clear.set_visible(true);
+    } else {
+         if (entry == entry_icon) {
+            open_icon.set_visible(true);
+        }
+        clear.set_visible(false);
+    }
+}
+
     private void on_open_icon () {
         var file_chooser = new Gtk.FileChooserNative (_("Select the icon"), this, Gtk.FileChooserAction.OPEN,null,null);
             file_chooser.set_modal(true);
@@ -347,16 +390,11 @@ public class WAC.MainWindow : Adw.ApplicationWindow {
     }
 
     private void on_edit_clicked () {
-        var selection = tree_view.get_selection ();
-        selection.set_mode (Gtk.SelectionMode.SINGLE);
-
-        Gtk.TreeModel model;
-        Gtk.TreeIter iter;
-        if (!selection.get_selected (out model, out iter)) {
-            set_toast (_("Choose a file"));
-            return;
-        }
-
+          var selection = list_box.get_selected_row();
+           if (!selection.is_selected()) {
+               set_toast(_("Choose a file"));
+               return;
+           }
         stack.visible_child = vbox_edit_page;
         set_buttons_on_edit_page ();
         string text;
@@ -373,7 +411,7 @@ public class WAC.MainWindow : Adw.ApplicationWindow {
             stack.visible_child = vbox_list_page;
             set_buttons_on_list_page ();
         }else{
-            stack.visible_child = vbox_create_page;
+            stack.visible_child = clamp_create_page;
             set_buttons_on_create_page ();
         }
     }
@@ -412,15 +450,11 @@ public class WAC.MainWindow : Adw.ApplicationWindow {
     }
 
     private void on_delete_clicked () {
-        var selection = tree_view.get_selection ();
-        selection.set_mode (Gtk.SelectionMode.SINGLE);
-
-        Gtk.TreeModel model;
-        Gtk.TreeIter iter;
-        if (!selection.get_selected (out model, out iter)) {
-            set_toast (_("Choose a file"));
-            return;
-        }
+          var selection = list_box.get_selected_row();
+           if (!selection.is_selected()) {
+               set_toast(_("Choose a file"));
+               return;
+           }
 
         GLib.File file = GLib.File.new_for_path (directory_path + "/" + item);
 
@@ -468,7 +502,7 @@ public class WAC.MainWindow : Adw.ApplicationWindow {
      
      private string browser(){
      string b = "";
-         switch (combobox.get_active()) {
+         switch (combo.get_selected ()) {
              case 0:
              b = "firefox";
              break;
@@ -501,21 +535,14 @@ public class WAC.MainWindow : Adw.ApplicationWindow {
      }
      
     private void on_select_item () {
-        var selection = tree_view.get_selection ();
-        selection.set_mode (Gtk.SelectionMode.SINGLE);
-
-        Gtk.TreeModel model;
-        Gtk.TreeIter iter;
-        if (!selection.get_selected (out model, out iter)) {
-            return;
-        }
-
-        Gtk.TreePath path = model.get_path (iter);
-        var index = int.parse (path.to_string ());
-        if (index >= 0) {
-            item = list.nth_data (index);
-        }
-    }
+        var selection = list_box.get_selected_row();
+           if (!selection.is_selected()) {
+               return;
+           }
+          GLib.Value value = "";
+          selection.get_property("title", ref value);
+          item = value.get_string();
+       }
 
     private void create_desktop_file () {
         string brows;
@@ -524,12 +551,16 @@ public class WAC.MainWindow : Adw.ApplicationWindow {
         }else{
             brows = entry_other_browser.get_text();
         }
+        string addr = entry_address.text.strip ();
+        if(!addr.contains ("http")&&!addr.contains ("://")){
+            addr = "https://" + addr;
+        }
         string desktop_file = "[Desktop Entry]
 Encoding=UTF-8
 Type=Application
 NoDisplay=" + "false" + "
 Terminal=" + "false" + "
-Exec=" +brows+" --app="+ entry_address.text.strip () + "
+Exec=" +brows+" --app="+ addr + "
 Icon=" + entry_icon.text.strip () + "
 Name=" + entry_name.text.strip () + "
 Comment=" + entry_comment.text.strip () + "
@@ -554,24 +585,55 @@ Categories=" + entry_categories.text.strip ();
     }
 
     private void show_desktop_files () {
-        list_store.clear ();
-        list = new GLib.List<string> ();
-        try {
+        var list = new GLib.List<string> ();
+            try {
             Dir dir = Dir.open (directory_path, 0);
             string? name = null;
             while ((name = dir.read_name ()) != null) {
-                list.append (name);
+                if(entry_search.is_visible()){
+                    if(name.down().contains(entry_search.get_text().down())){
+                       list.append(name);
+                    }
+                    }else{
+                       list.append(name);
+                }
             }
         } catch (FileError err) {
             stderr.printf (err.message);
         }
-
-        Gtk.TreeIter iter;
-        foreach (string item in list) {
-            list_store.append (out iter);
-            list_store.set (iter, Columns.TEXT, item);
+        for (
+            var child = (Gtk.ListBoxRow) list_box.get_last_child ();
+                child != null;
+                child = (Gtk.ListBoxRow) list_box.get_last_child ()
+        ) {
+            list_box.remove(child);
         }
+           foreach (string item in list) {
+                var row = new Adw.ActionRow () {
+                title = item
+            };
+            list_box.append(row);
+           }
     }
+
+     private int get_index(string item){
+            int index_of_item = 0;
+            try {
+            Dir dir = Dir.open (directory_path, 0);
+            string? name = null;
+            int index = 0;
+            while ((name = dir.read_name ()) != null) {
+                index++;
+                if(name == item){
+                  index_of_item = index - 1;
+                  break;
+                }
+            }
+        } catch (FileError err) {
+            stderr.printf (err.message);
+          }
+          return index_of_item;
+        }
 
     private void set_widget_visible (Gtk.Widget widget, bool visible) {
         widget.visible = !visible;
@@ -586,6 +648,7 @@ Categories=" + entry_categories.text.strip ();
         set_widget_visible (clear_button, true);
         set_widget_visible (button_create, false);
         set_widget_visible (button_show_all, false);
+        set_widget_visible (search_button, false);
     }
 
     private void set_buttons_on_list_page () {
@@ -596,6 +659,7 @@ Categories=" + entry_categories.text.strip ();
         set_widget_visible (clear_button, false);
         set_widget_visible (button_create, false);
         set_widget_visible (button_show_all, false);
+        set_widget_visible (search_button, true);
     }
 
     private void set_buttons_on_create_page () {
@@ -606,6 +670,7 @@ Categories=" + entry_categories.text.strip ();
         set_widget_visible (clear_button, false);
         set_widget_visible (button_create, true);
         set_widget_visible (button_show_all, true);
+        set_widget_visible (search_button, false);
     }
 
     private void set_toast(string str){
